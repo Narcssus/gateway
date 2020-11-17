@@ -1,0 +1,45 @@
+# 服务端口
+server:
+  port: 80
+spring:
+  application:
+    name: gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://test:narc1234@eurekaServer2:80/eureka/,http://test:narc1234@eurekaServer1:80/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: 106.52.120.197:80
+logging:
+  level:
+    org.springframework: debug
+  file:
+    name: ./logs/gateway.log
+# 路由配置
+zuul:
+  routes:
+    tencent:
+      path: /tencent/**
+      serviceId: tencent
+  strip-prefix: false
+  set-content-length: true
+  semaphore:
+    max-semaphores: 1000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            # 熔断超时时间
+            timeoutInMilliseconds: 40000
+ribbon:
+  # 方法调用处理时间
+  ReadTimeout: 9000
+  # 连接时间
+  SocketTimeout: 1000
+  # 对当前服务的重试次数
+  MaxAutoRetries: 1
+  # 切换相同Server的次数
+  MaxAutoRetriesNextServer: 1
